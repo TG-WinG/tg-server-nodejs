@@ -1,7 +1,4 @@
 require('dotenv').config();
-// const React = require('react');
-// const ReactDOMServer = require('react-dom/server')
-// const App = require('./react폴더위치')
 const express = require('express');
 const app = express();
 
@@ -13,23 +10,24 @@ const cors = require('cors');
 app.use(helmet());
 app.use(express.json());
 app.use(express.static('public'));
+// app.use(express.static(path.join(__dirname, '프로젝트명/build')));
 app.use(cors());
 
 // server open
-app.listen(process.env.NODE_PORT, () => {
+app.listen(8080, () => {
   console.log('listening on node_port')
 })
 
-// router setting
-app.use('/info', require('./router/info'))
-app.use('/login', require('./router/login'))
-app.use('/calender', require('./router/calender'))
-app.use('/gallery', require('./router/gallery'))
-app.use('/profile', require('./router/profile'))
-app.use('/notice', require('./router/notice')) 
-
-// react-nodejs SSR
+// router setting (build하기 이전)
+app.get('*', (req,res) => {
+  res.redirect('http://localhost:3000')
+})
+// (위에 거 작동 안 하면 이걸로 해보세요)
 // app.get('*', (req,res) => {
-//   const html = ReactDOMServer.renderToString(<App />);
-//   res.send(html);
+//   res.sendFile(__dirname, '프로젝트명/public/index.html');
 // })
+
+// router setting (build한 후)
+app.get('*', (req,res) => {
+  res.sendFile(__dirname, '/프로젝트명/public/index.html');
+})
